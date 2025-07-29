@@ -46,11 +46,14 @@ function GalleryContent() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchText, setSearchText] = useState<string>("");
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewVideo, setPreviewVideo] = useState<string>("");
 
   const {
     data: galleryResponse,
     isLoading,
     error,
+    refetch
   } = useGallery({
     category: selectedCategory === "all" ? undefined : selectedCategory,
     search: searchText || undefined,
@@ -68,11 +71,15 @@ function GalleryContent() {
   const handleImageUpload = (file: File) => {
     uploadImageMutation.mutate(file, {
       onSuccess: (data: any) => {
-        message.success("文件上传成功！");
         setIsModalVisible(false);
       },
     });
     return false; // 阻止自动上传
+  };
+
+  const handleVideoPreview = (videoUrl: string) => {
+    setPreviewVideo(videoUrl);
+    setPreviewVisible(true);
   };
 
   // 瀑布流断点配置
@@ -133,7 +140,17 @@ function GalleryContent() {
                           muted={true}
                           loop={true}
                           playsInline={true}
+                          className="w-full object-cover cursor-pointer"
+                          onClick={() => handleVideoPreview(item.imageUrl)}
                         />
+                        <div 
+                          className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-300 cursor-pointer"
+                          onClick={() => handleVideoPreview(item.imageUrl)}
+                        >
+                          <div className="text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <EyeOutlined className="text-2xl" />
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <Image
@@ -195,6 +212,27 @@ function GalleryContent() {
               <span className="ml-2 text-blue-500">上传中...</span>
             </div>
           )}
+        </div>
+      </Modal>
+
+      {/* 视频预览模态框 */}
+      <Modal
+        title="视频预览"
+        open={previewVisible}
+        onCancel={() => setPreviewVisible(false)}
+        footer={null}
+        width={800}
+        centered
+        destroyOnClose
+      >
+        <div className="text-center">
+          <video
+            src={previewVideo}
+            controls={true}
+            autoPlay={false}
+            muted={false}
+            style={{ width: '100%', maxHeight: '70vh' }}
+          />
         </div>
       </Modal>
     </AppLayout>

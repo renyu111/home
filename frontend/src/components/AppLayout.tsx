@@ -101,7 +101,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider 
+        trigger={null} 
+        collapsible 
+        collapsed={collapsed}
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 1000,
+          transition: 'all 0.2s',
+        }}
+      >
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -111,8 +123,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
           items={menuItems}
         />
       </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: '#fff' }}>
+      <Layout style={{ 
+        marginLeft: collapsed ? 80 : 200,
+        transition: 'all 0.2s',
+      }}>
+        <Header 
+          style={{ 
+            padding: 0, 
+            background: '#fff',
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            left: collapsed ? 80 : 200,
+            zIndex: 999,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            transition: 'all 0.2s',
+          }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px' }}>
             <Button
               type="text"
@@ -134,7 +161,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </Space>
           </div>
         </Header>
-        <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
+        <Content 
+          style={{ 
+            margin: '88px 16px 24px 16px', 
+            padding: 24, 
+            background: '#fff',
+            minHeight: 'calc(100vh - 112px)',
+            overflow: 'auto',
+            transition: 'all 0.2s',
+          }}
+        >
           {children}
         </Content>
       </Layout>

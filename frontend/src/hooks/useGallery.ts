@@ -26,7 +26,9 @@ export const useUploadImage = () => {
   return useMutation({
     mutationFn: galleryAPI.uploadImage,
     onSuccess: (data) => {
-      message.success('图片上传成功！');
+      message.success('文件上传成功！');
+      // 刷新gallery列表
+      queryClient.invalidateQueries({ queryKey: ['gallery'] });
       return data;
     },
     onError: (error: any) => {
