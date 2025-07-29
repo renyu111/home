@@ -1,0 +1,24 @@
+[
+  {
+    "id": "1753788347471",
+    "title": "百度",
+    "url": "https://www.baidu.com/index.htm",
+    "description": "",
+    "category": "其他",
+    "tags": [],
+    "createdAt": "2025-07-29T11:25:47.471Z",
+    "createdBy": "System",
+    "updatedAt": "2025-07-29T11:32:04.797Z",
+    "updatedBy": "System"
+  },
+  {
+    "id": "1753788460295",
+    "title": "淘宝",
+    "url": "https://www.taobao.com/",
+    "description": "",
+    "category": "其他",
+    "tags": [],
+    "createdAt": "2025-07-29T11:27:40.295Z",
+    "createdBy": "System"
+  }
+]

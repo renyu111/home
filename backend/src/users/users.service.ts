@@ -20,10 +20,11 @@ export class UsersService {
         email: createUserDto.email,
         password: createUserDto.password,
         name: createUserDto.name,
+        isAdmin: false,
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as UserDocument;
+      } as any;
     }
   }
 

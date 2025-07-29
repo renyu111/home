@@ -126,7 +126,7 @@ function GalleryContent() {
                       <div className="relative">
                         <video
                           src={item.imageUrl}
-                          width="100%"
+                          width="200px"
                           height="auto"
                           controls={false}
                           autoPlay={true}

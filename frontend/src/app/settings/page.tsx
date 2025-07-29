@@ -16,14 +16,16 @@ import {
   message,
   Alert,
   Descriptions,
-  Tag
+  Tag,
+  InputNumber,
+  Checkbox
 } from 'antd';
 import {
   SettingOutlined,
   SaveOutlined,
   ReloadOutlined,
   DatabaseOutlined,
-  SecurityOutlined,
+  SecurityScanOutlined,
   BellOutlined,
   UserOutlined,
   GlobalOutlined
@@ -98,7 +100,7 @@ function SettingsContent() {
         <Row gutter={[24, 24]}>
           {/* 基本设置 */}
           <Col span={12}>
-            <Card title="基本设置" icon={<SettingOutlined />}>
+            <Card title="基本设置">
               <Form.Item
                 name="siteName"
                 label="网站名称"
@@ -119,7 +121,7 @@ function SettingsContent() {
                 name="theme"
                 label="主题设置"
               >
-                <Select>
+                <Select placeholder="请选择主题">
                   <Option value="light">浅色主题</Option>
                   <Option value="dark">深色主题</Option>
                   <Option value="auto">跟随系统</Option>
@@ -130,7 +132,7 @@ function SettingsContent() {
                 name="language"
                 label="语言设置"
               >
-                <Select>
+                <Select placeholder="请选择语言">
                   <Option value="zh-CN">简体中文</Option>
                   <Option value="en-US">English</Option>
                   <Option value="ja-JP">日本語</Option>
@@ -141,7 +143,7 @@ function SettingsContent() {
 
           {/* 安全设置 */}
           <Col span={12}>
-            <Card title="安全设置" icon={<SecurityOutlined />}>
+            <Card title="安全设置">
               <Form.Item
                 name="maintenanceMode"
                 label="维护模式"
@@ -159,34 +161,26 @@ function SettingsContent() {
               </Form.Item>
 
               <Form.Item
-                name="sessionTimeout"
-                label="会话超时时间（分钟）"
+                name="maxFileSize"
+                label="最大文件大小 (MB)"
+                rules={[{ required: true, message: '请输入最大文件大小' }]}
               >
-                <Select>
-                  <Option value={15}>15分钟</Option>
-                  <Option value={30}>30分钟</Option>
-                  <Option value={60}>1小时</Option>
-                  <Option value={120}>2小时</Option>
-                </Select>
+                <InputNumber min={1} max={100} style={{ width: '100%' }} />
               </Form.Item>
 
               <Form.Item
-                name="maxFileSize"
-                label="最大文件上传大小（MB）"
+                name="sessionTimeout"
+                label="会话超时时间 (分钟)"
+                rules={[{ required: true, message: '请输入会话超时时间' }]}
               >
-                <Select>
-                  <Option value={5}>5MB</Option>
-                  <Option value={10}>10MB</Option>
-                  <Option value={20}>20MB</Option>
-                  <Option value={50}>50MB</Option>
-                </Select>
+                <InputNumber min={5} max={1440} style={{ width: '100%' }} />
               </Form.Item>
             </Card>
           </Col>
 
           {/* 通知设置 */}
           <Col span={12}>
-            <Card title="通知设置" icon={<BellOutlined />}>
+            <Card title="通知设置">
               <Form.Item
                 name="emailNotifications"
                 label="邮件通知"
@@ -195,26 +189,30 @@ function SettingsContent() {
                 <Switch />
               </Form.Item>
 
-              <Alert
-                message="通知设置说明"
-                description="开启邮件通知后，系统会向用户发送重要事件的通知邮件。"
-                type="info"
-                showIcon
-                style={{ marginBottom: 16 }}
-              />
+              <Form.Item
+                name="notificationTypes"
+                label="通知类型"
+              >
+                <Checkbox.Group options={[
+                  { label: '系统消息', value: 'system' },
+                  { label: '安全提醒', value: 'security' },
+                  { label: '更新通知', value: 'update' },
+                  { label: '活动通知', value: 'activity' }
+                ]} />
+              </Form.Item>
             </Card>
           </Col>
 
           {/* 系统信息 */}
           <Col span={12}>
-            <Card title="系统信息" icon={<DatabaseOutlined />}>
+            <Card title="系统信息">
               <Descriptions column={1} size="small">
-                <Descriptions.Item label="Node.js版本">18.17.0</Descriptions.Item>
-                <Descriptions.Item label="数据库">MongoDB 6.0</Descriptions.Item>
+                <Descriptions.Item label="Node.js版本">v18.0.0</Descriptions.Item>
+                <Descriptions.Item label="数据库">MongoDB v6.0</Descriptions.Item>
                 <Descriptions.Item label="前端框架">Next.js 14</Descriptions.Item>
                 <Descriptions.Item label="后端框架">NestJS</Descriptions.Item>
                 <Descriptions.Item label="UI组件库">Ant Design</Descriptions.Item>
-                <Descriptions.Item label="状态管理">TanStack Query</Descriptions.Item>
+                <Descriptions.Item label="运行时间">3天 12小时 45分钟</Descriptions.Item>
               </Descriptions>
             </Card>
           </Col>

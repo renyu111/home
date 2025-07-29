@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { userAPI } from '../services/api';
+import { usersAPI } from '../services/api';
 import { message } from 'antd';
 
 export const useUsers = () => {
   return useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const response = await userAPI.getUsers();
+      const response = await usersAPI.getUsers();
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5分钟
@@ -18,7 +18,7 @@ export const useUser = (id: string) => {
   return useQuery({
     queryKey: ['user', id],
     queryFn: async () => {
-      const response = await userAPI.getUser(id);
+      const response = await usersAPI.getUser(id);
       return response.data;
     },
     enabled: !!id,
@@ -31,7 +31,7 @@ export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: userAPI.createUser,
+    mutationFn: usersAPI.createUser,
     onSuccess: () => {
       message.success('用户创建成功！');
       // 使用户列表缓存失效
@@ -48,7 +48,7 @@ export const useUpdateUser = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
-      userAPI.updateUser(id, data),
+      usersAPI.updateUser(id, data),
     onSuccess: (_, { id }) => {
       message.success('用户更新成功！');
       // 使相关缓存失效
@@ -65,7 +65,7 @@ export const useDeleteUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: userAPI.deleteUser,
+    mutationFn: usersAPI.deleteUser,
     onSuccess: () => {
       message.success('用户删除成功！');
       // 使用户列表缓存失效

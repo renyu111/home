@@ -15,7 +15,9 @@ import {
   LogoutOutlined,
   BellOutlined,
   MenuOutlined,
-  PictureOutlined
+  PictureOutlined,
+  BookOutlined,
+  FileTextOutlined
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLogout } from '../hooks/useAuth';
@@ -45,40 +47,56 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   const handleMenuClick = (key: string) => {
-    switch (key) {
-      case 'gallery':
-        if (pathname !== '/gallery') {
-          router.push('/gallery');
-        }
-        break;
-      case 'settings':
-        if (pathname !== '/settings') {
-          router.push('/settings');
-        }
-        break;
+    if (pathname !== key) {
+      router.push(key);
     }
   };
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
-        个人资料
-      </Menu.Item>
-      <Menu.Item key="settings" icon={<SettingOutlined />}>
-        设置
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        退出登录
-      </Menu.Item>
-    </Menu>
-  );
+  const userMenuItems = [
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: '个人资料',
+    },
+    {
+      key: 'settings',
+      icon: <SettingOutlined />,
+      label: '设置',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: '退出登录',
+      onClick: handleLogout,
+    },
+  ];
+
+  const menuItems = [
+    {
+      key: "/gallery",
+      icon: <PictureOutlined />,
+      label: "图片鉴赏",
+    },
+    {
+      key: "/bookmarks",
+      icon: <BookOutlined />,
+      label: "收藏夹",
+    },
+    {
+      key: "/files",
+      icon: <FileTextOutlined />,
+      label: "本地文档",
+    },
+    {
+      key: "/docs",
+      icon: <FileTextOutlined />,
+      label: "文档",
+    },
+  ];
 
   // 根据当前路径确定选中的菜单项
   const getSelectedKey = () => {
-    if (pathname === '/gallery') return 'gallery';
-    if (pathname === '/settings') return 'settings';
-    return 'gallery'; // 默认选中图片鉴赏
+    return pathname;
   };
 
   return (
@@ -90,18 +108,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           mode="inline"
           selectedKeys={[getSelectedKey()]}
           onClick={({ key }) => handleMenuClick(key)}
-          items={[
-            {
-              key: 'gallery',
-              icon: <PictureOutlined />,
-              label: '图片鉴赏',
-            },
-            {
-              key: 'settings',
-              icon: <SettingOutlined />,
-              label: '系统设置',
-            },
-          ]}
+          items={menuItems}
         />
       </Sider>
       <Layout>
@@ -119,7 +126,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             />
             <Space>
               <Button type="text" icon={<BellOutlined />} />
-              <Dropdown overlay={userMenu} placement="bottomRight">
+              <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                 <Button type="text" icon={<UserOutlined />}>
                   {user?.name || '用户'}
                 </Button>
