@@ -17,7 +17,8 @@ import {
   MenuOutlined,
   PictureOutlined,
   BookOutlined,
-  FileTextOutlined
+  FileTextOutlined,
+  ThunderboltOutlined
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLogout } from '../hooks/useAuth';
@@ -75,7 +76,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     {
       key: "/gallery",
       icon: <PictureOutlined />,
-      label: "图片鉴赏",
+      label: "pic",
     },
     {
       key: "/bookmarks",
@@ -91,6 +92,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
       key: "/docs",
       icon: <FileTextOutlined />,
       label: "文档",
+    },
+    {
+      key: "/gsap",
+      icon: <ThunderboltOutlined />,
+      label: "GSAP",
+    },
+    {
+      key: "/css",
+      icon: <ThunderboltOutlined />,
+      label: "css",
     },
   ];
 

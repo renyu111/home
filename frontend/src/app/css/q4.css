@@ -1,0 +1,16 @@
+.gradient {
+  width: 100px;
+  height: 50px;
+  border: 1px solid #000;
+  background: linear-gradient(45deg, #ffc107, deeppink, #9c27b0);
+  animation: gradient 1s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}

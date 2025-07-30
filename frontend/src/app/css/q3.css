@@ -1,0 +1,32 @@
+:root {
+  --color-primary: #000;
+  --width: 300px;
+  --height: 300px;
+}
+
+.q3 {
+  background-color: var(--color-primary);
+  width: var(--width);
+  height: var(--height);
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --width: 100px;
+    --height: 100px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  :root {
+    --width: 300px;
+    --height: 300px;
+  }
+}
+
+@supports (position: sticky) {
+  .q3 {
+    position: sticky;
+    top: 0;
+  }
+}

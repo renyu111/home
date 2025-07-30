@@ -1,0 +1,45 @@
+@position-try --position-bottom {
+  left: anchor(--btn-b center);
+  top: anchor(--btn-b bottom);
+  transform: translate(-50%, 5px);
+}
+
+
+.btn-a,
+.btn-b {
+  width: 100px;
+  height: 100px;
+  background: #000;
+  margin: 50px;
+}
+
+.btn-a {
+  anchor-name: --btn-a;
+}
+
+.btn-b {
+  anchor-name: --btn-b;
+}
+
+.btn-a:hover ~ .anchor {
+  display: block;
+  position-anchor: --btn-a;
+  left: anchor(--btn-a center);
+  top: anchor(--btn-a top);
+  transform: translate(-50%, calc(-100% - 10px));
+  position-try-fallbacks: --position-bottom;
+}
+
+.btn-b:hover ~ .anchor {
+  display: block;
+  position-anchor: --btn-b;
+  left: anchor(--btn-b center);
+  top: anchor(--btn-b bottom);
+  transform: translate(-50%, 5px);
+}
+
+.anchor {
+  transition: all 0.2s;
+  width: anchor-size(width);
+  height: anchor-size(height);
+}

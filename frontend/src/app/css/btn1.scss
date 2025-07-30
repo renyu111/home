@@ -1,0 +1,30 @@
+.btn1 {
+  background-size: 70% 70%;
+  background-image: radial-gradient(
+      circle at 100% 100%,
+      transparent 0,
+      transparent 12px,
+      #2179f5 13px
+
+    ),
+    radial-gradient(
+      circle at 0 0,
+      transparent 0,
+      transparent 12px,
+      #2179f5 13px
+    ),
+    radial-gradient(
+      circle at 100% 0,
+      transparent 0,
+      transparent 12px,
+      #2179f5 13px
+    ),
+    radial-gradient(
+      circle at 0 100%,
+      transparent 0,
+      transparent 12px,
+      #2179f5 13px
+    );
+  background-repeat: no-repeat;
+  background-position: right bottom, left top, right top, left bottom;
+}
