@@ -13,9 +13,14 @@ async function bootstrap() {
     credentials: true,
   });
   
-  // 静态文件服务
+  // 静态文件服务 - 用户上传的文件
   app.useStaticAssets(join(process.cwd(), 'assets', 'uploads'), {
     prefix: '/uploads/',
+  });
+  
+  // 静态文件服务 - AI生成的图片
+  app.useStaticAssets(join(process.cwd(), 'assets', 'ai-generated'), {
+    prefix: '/ai-generated/',
   });
   
   // 全局验证管道

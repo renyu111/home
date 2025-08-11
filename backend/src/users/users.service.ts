@@ -1,87 +1,92 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from './user.schema';
-import * as bcrypt from 'bcryptjs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
+
+type UserRecord = {
+  _id: string;
+  email: string;
+  password?: string;
+  name: string;
+  isAdmin: boolean;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  private dataFile = join(process.cwd(), 'data', 'users.json');
 
-  async create(createUserDto: any): Promise<UserDocument> {
-    try {
-      const createdUser = new this.userModel(createUserDto);
-      return await createdUser.save();
-    } catch (error) {
-      console.log('Database error in create user:', error.message);
-      // 返回一个模拟用户对象
-      return {
-        _id: 'mock-user-id',
-        email: createUserDto.email,
-        password: createUserDto.password,
-        name: createUserDto.name,
-        isAdmin: false,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as any;
-    }
+  private ensureFile() {
+    const dir = join(process.cwd(), 'data');
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    if (!existsSync(this.dataFile)) writeFileSync(this.dataFile, '[]', 'utf-8');
   }
 
-  async findAll(): Promise<UserDocument[]> {
-    try {
-      return await this.userModel.find().exec();
-    } catch (error) {
-      console.log('Database error in findAll:', error.message);
-      return [];
-    }
+  private readAll(): UserRecord[] {
+    this.ensureFile();
+    const raw = readFileSync(this.dataFile, 'utf-8');
+    try { return JSON.parse(raw) as UserRecord[]; } catch { return []; }
   }
 
-  async findOne(id: string): Promise<UserDocument> {
-    try {
-      return await this.userModel.findById(id).exec();
-    } catch (error) {
-      console.log('Database error in findOne:', error.message);
-      return null;
-    }
+  private writeAll(list: UserRecord[]): void {
+    writeFileSync(this.dataFile, JSON.stringify(list, null, 2), 'utf-8');
   }
 
-  async findByEmail(email: string): Promise<UserDocument> {
-    try {
-      return await this.userModel.findOne({ email }).exec();
-    } catch (error) {
-      console.log('Database error in findByEmail:', error.message);
-      return null;
-    }
+  async create(createUserDto: any): Promise<UserRecord> {
+    const list = this.readAll();
+    const item: UserRecord = {
+      _id: `usr_${Date.now()}`,
+      email: createUserDto.email,
+      password: createUserDto.password,
+      name: createUserDto.name,
+      isAdmin: false,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    list.push(item);
+    this.writeAll(list);
+    return item;
   }
 
-  async update(id: string, updateUserDto: any): Promise<UserDocument> {
-    try {
-      return await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
-    } catch (error) {
-      console.log('Database error in update:', error.message);
-      return null;
-    }
+  async findAll(): Promise<UserRecord[]> {
+    return this.readAll();
   }
 
-  async remove(id: string): Promise<UserDocument> {
-    try {
-      return await this.userModel.findByIdAndDelete(id).exec();
-    } catch (error) {
-      console.log('Database error in remove:', error.message);
-      return null;
-    }
+  async findOne(id: string): Promise<UserRecord | null> {
+    const list = this.readAll();
+    return list.find(u => u._id === id) || null;
+  }
+
+  async findByEmail(email: string): Promise<UserRecord | null> {
+    const list = this.readAll();
+    return list.find(u => u.email === email) || null;
+  }
+
+  async update(id: string, updateUserDto: any): Promise<UserRecord | null> {
+    const list = this.readAll();
+    const idx = list.findIndex(u => u._id === id);
+    if (idx < 0) return null;
+    const updated: UserRecord = { ...list[idx], ...updateUserDto, updatedAt: new Date().toISOString() };
+    list[idx] = updated;
+    this.writeAll(list);
+    return updated;
+  }
+
+  async remove(id: string): Promise<UserRecord | null> {
+    const list = this.readAll();
+    const idx = list.findIndex(u => u._id === id);
+    if (idx < 0) return null;
+    const removed = list[idx];
+    list.splice(idx, 1);
+    this.writeAll(list);
+    return removed;
   }
 
   async validatePassword(email: string, password: string): Promise<boolean> {
-    try {
-      const user = await this.findByEmail(email);
-      if (!user) return false;
-      // 这里应该使用bcrypt比较密码，暂时简化
-      return user.password === password;
-    } catch (error) {
-      console.log('Database error in validatePassword:', error.message);
-      return false;
-    }
+    const user = await this.findByEmail(email);
+    if (!user) return false;
+    return user.password === password;
   }
 }

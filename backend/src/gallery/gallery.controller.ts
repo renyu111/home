@@ -7,7 +7,7 @@ import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
 import { QueryGalleryDto } from './dto/query-gallery.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
 import { join } from 'path';
 
 @Controller('gallery')
@@ -188,38 +188,79 @@ export class GalleryController {
 
   @Get()
   async findAll(@Query() query: QueryGalleryDto) {
-    const uploadsPath = './assets/uploads';
-    
-    // 检查uploads目录是否存在
+    const uploadsPath = join(process.cwd(), 'assets', 'uploads');
+
     if (!existsSync(uploadsPath)) {
       console.log('Uploads directory not found:', uploadsPath);
-      return { data: [], total: 0 };
+      return { data: [], total: 0, tree: { type: 'directory', name: 'uploads', path: '/', children: [] } };
     }
-    
-    // 读取uploads目录中的所有文件
-    const files = readdirSync(uploadsPath);
-    console.log('Found files:', files);
-    
-    // 转换为文件信息数组
-    const fileList = files.map(filename => ({
-      _id: filename,
-      title: filename,
-      description: `上传的文件: ${filename}`,
-      imageUrl: `http://localhost:3344/uploads/${filename}`,
-      category: 'uploaded',
-      tags: [filename.split('.').pop() || 'unknown'],
-      likes: 0,
-      views: 0,
-      rating: 0,
-      uploaderName: 'System',
-      createdAt: new Date().toISOString()
-    }));
-    
-    console.log('Returning file list:', fileList.length);
-    return { 
-      data: fileList, 
-      total: fileList.length 
-    };
+
+    const baseUrl = 'http://localhost:3344/uploads';
+
+    type TreeNode = { type: 'directory' | 'file'; name: string; path: string; children?: TreeNode[]; url?: string };
+
+    const imageLikeExtensions = new Set(['jpg','jpeg','png','gif','webp','bmp','svg']);
+    const videoLikeExtensions = new Set(['mp4','mov','webm','m4v']);
+
+    const flatFiles: any[] = [];
+
+    function isMediaFile(fileName: string): boolean {
+      const ext = (fileName.split('.').pop() || '').toLowerCase();
+      return imageLikeExtensions.has(ext) || videoLikeExtensions.has(ext);
+    }
+
+    function scan(dirAbs: string, relPath: string): TreeNode {
+      const entries = readdirSync(dirAbs);
+      const children: TreeNode[] = [];
+
+      for (const entry of entries) {
+        const abs = join(dirAbs, entry);
+        const isDir = statSync(abs).isDirectory();
+        const childRel = relPath ? `${relPath}/${entry}` : entry;
+        if (isDir) {
+          const node = scan(abs, childRel);
+          children.push(node);
+        } else {
+          // only include media-like files
+          if (!isMediaFile(entry)) continue;
+          const url = `${baseUrl}/${childRel.replace(/\\/g, '/')}`;
+          children.push({ type: 'file', name: entry, path: `/${childRel}`, url });
+          flatFiles.push({
+            _id: childRel,
+            title: entry,
+            description: `上传的文件: ${entry}`,
+            imageUrl: url,
+            category: 'uploaded',
+            tags: [entry.split('.').pop() || 'unknown'],
+            likes: 0,
+            views: 0,
+            rating: 0,
+            uploaderName: 'System',
+            createdAt: new Date().toISOString(),
+            path: `/${childRel}`,
+          });
+        }
+      }
+
+      // sort: directories first then files, by name
+      children.sort((a, b) => {
+        if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      return { type: 'directory', name: relPath || 'uploads', path: `/${relPath}`.replace(/\/$/, '/') || '/', children };
+    }
+
+    const tree = scan(uploadsPath, '');
+
+    // filtering by category/search can be applied on flatFiles if needed
+    let list = flatFiles;
+    if (query?.search) {
+      const kw = (query.search || '').toLowerCase();
+      list = list.filter(x => (x.title || '').toLowerCase().includes(kw));
+    }
+
+    return { data: list, total: list.length, tree };
   }
 
   @Get('categories')
