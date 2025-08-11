@@ -7,7 +7,7 @@ export const useGallery = (params?: { category?: string; search?: string; page?:
     queryKey: ['gallery', params],
     queryFn: async () => {
       const response = await galleryAPI.getGallery(params);
-      return response.data; // 提取响应数据
+      return response.data;
     },
   });
 };
@@ -15,7 +15,7 @@ export const useGallery = (params?: { category?: string; search?: string; page?:
 export const useGalleryItem = (id: string) => {
   return useQuery({
     queryKey: ['gallery', id],
-    queryFn: () => galleryAPI.getGalleryItem(id),
+    queryFn: async () => (await galleryAPI.getGalleryItem(id)).data,
     enabled: !!id,
   });
 };

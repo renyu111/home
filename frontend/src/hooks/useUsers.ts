@@ -5,22 +5,16 @@ import { message } from 'antd';
 export const useUsers = () => {
   return useQuery({
     queryKey: ['users'],
-    queryFn: async () => {
-      const response = await usersAPI.getUsers();
-      return response.data;
-    },
-    staleTime: 5 * 60 * 1000, // 5分钟
-    gcTime: 10 * 60 * 1000, // 10分钟
+    queryFn: async () => (await usersAPI.getUsers()).data,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };
 
 export const useUser = (id: string) => {
   return useQuery({
     queryKey: ['user', id],
-    queryFn: async () => {
-      const response = await usersAPI.getUser(id);
-      return response.data;
-    },
+    queryFn: async () => (await usersAPI.getUser(id)).data,
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

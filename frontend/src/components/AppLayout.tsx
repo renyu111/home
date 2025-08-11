@@ -1,14 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { 
-  Layout, 
-  Menu, 
-  Button, 
-  Space,
-  Dropdown,
-  Typography
-} from 'antd';
+import { useState, useEffect } from "react";
+import { Layout, Menu, Button, Space, Dropdown, Typography } from "antd";
 import {
   UserOutlined,
   SettingOutlined,
@@ -18,10 +11,10 @@ import {
   PictureOutlined,
   BookOutlined,
   FileTextOutlined,
-  ThunderboltOutlined
-} from '@ant-design/icons';
-import { useRouter, usePathname } from 'next/navigation';
-import { useLogout } from '../hooks/useAuth';
+  ThunderboltOutlined,
+} from "@ant-design/icons";
+import { useRouter, usePathname } from "next/navigation";
+// 登录/注册已移除
 
 const { Header, Sider, Content } = Layout;
 
@@ -34,18 +27,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const pathname = usePathname();
-  const logoutMutation = useLogout();
+  // 无登录状态
 
   useEffect(() => {
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem("user");
     if (userData) {
       setUser(JSON.parse(userData));
     }
   }, []);
 
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
+  const handleLogout = () => {};
 
   const handleMenuClick = (key: string) => {
     if (pathname !== key) {
@@ -55,20 +46,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   const userMenuItems = [
     {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: '个人资料',
-    },
-    {
-      key: 'settings',
+      key: "settings",
       icon: <SettingOutlined />,
-      label: '设置',
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-      onClick: handleLogout,
+      label: "设置",
     },
   ];
 
@@ -77,21 +57,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
       key: "/gallery",
       icon: <PictureOutlined />,
       label: "pic",
-    },
-    {
-      key: "/bookmarks",
-      icon: <BookOutlined />,
-      label: "收藏夹",
-    },
-    {
-      key: "/files",
-      icon: <FileTextOutlined />,
-      label: "本地文档",
-    },
-    {
-      key: "/docs",
-      icon: <FileTextOutlined />,
-      label: "文档",
     },
     {
       key: "/gsap",
@@ -111,18 +76,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider 
-        trigger={null} 
-        collapsible 
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sider
+        trigger={null}
+        collapsible
         collapsed={collapsed}
         style={{
-          position: 'fixed',
+          position: "fixed",
           left: 0,
           top: 0,
           bottom: 0,
           zIndex: 1000,
-          transition: 'all 0.2s',
+          transition: "all 0.2s",
         }}
       >
         <div className="demo-logo-vertical" />
@@ -134,30 +99,39 @@ export default function AppLayout({ children }: AppLayoutProps) {
           items={menuItems}
         />
       </Sider>
-      <Layout style={{ 
-        marginLeft: collapsed ? 80 : 200,
-        transition: 'all 0.2s',
-      }}>
-        <Header 
-          style={{ 
-            padding: 0, 
-            background: '#fff',
-            position: 'fixed',
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 200,
+          transition: "all 0.2s",
+        }}
+      >
+        <Header
+          style={{
+            padding: 0,
+            background: "#fff",
+            position: "fixed",
             top: 0,
             right: 0,
             left: collapsed ? 80 : 200,
             zIndex: 999,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            transition: 'all 0.2s',
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            transition: "all 0.2s",
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0 24px",
+            }}
+          >
             <Button
               type="text"
               icon={<MenuOutlined />}
               onClick={() => setCollapsed(!collapsed)}
               style={{
-                fontSize: '16px',
+                fontSize: "16px",
                 width: 64,
                 height: 64,
               }}
@@ -165,21 +139,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <Space>
               <Button type="text" icon={<BellOutlined />} />
               <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-                <Button type="text" icon={<UserOutlined />}>
-                  {user?.name || '用户'}
-                </Button>
+                <Button type="text" icon={<UserOutlined />}>访客</Button>
               </Dropdown>
             </Space>
           </div>
         </Header>
-        <Content 
-          style={{ 
-            margin: '88px 16px 24px 16px', 
-            padding: 24, 
-            background: '#fff',
-            minHeight: 'calc(100vh - 112px)',
-            overflow: 'auto',
-            transition: 'all 0.2s',
+        <Content
+          style={{
+            margin: "88px 16px 24px 16px",
+            padding: 24,
+            background: "#fff",
+            minHeight: "calc(100vh - 112px)",
+            overflow: "auto",
+            transition: "all 0.2s",
           }}
         >
           {children}

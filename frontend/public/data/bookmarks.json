@@ -1,0 +1,11 @@
+[
+  {
+    "_id": "bm_seed_1",
+    "title": "项目主页",
+    "url": "https://example.com",
+    "description": "静态书签示例",
+    "category": "其他",
+    "tags": ["link"],
+    "createdBy": "system"
+  }
+]

@@ -18,7 +18,6 @@ import {
   Popconfirm,
 } from "antd";
 import { BookOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import AuthGuard from "../../components/AuthGuard";
 import AppLayout from "../../components/AppLayout";
 import { bookmarkAPI } from "../../services/api";
 
@@ -387,9 +386,5 @@ function BookmarksContent() {
 }
 
 export default function Bookmarks() {
-  return (
-    <AuthGuard>
-      <BookmarksContent />
-    </AuthGuard>
-  );
+  return <BookmarksContent />;
 }

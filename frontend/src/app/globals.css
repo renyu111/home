@@ -50,6 +50,12 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* 自定义Ant Design主题 */
@@ -72,3 +78,95 @@ body {
   border-color: #1890ff;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
+
+/* 画廊标签页样式 */
+.gallery-tabs .ant-tabs-content-holder {
+  padding: 0;
+}
+
+.gallery-tabs .ant-tabs-tab {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.gallery-tabs .ant-tabs-tab-active {
+  font-weight: 600;
+}
+
+/* 去除 antd Tree 默认缩进，让树平铺显示层级线但无左侧缩进 */
+.no-indent-tree .ant-tree-treenode {
+  padding-left: 0 !important;
+}
+.no-indent-tree .ant-tree-indent-unit {
+  width: 0 !important;
+}
+.no-indent-tree .ant-tree-switcher {
+  margin-inline-end: 4px;
+}
+
+/* 侧栏可调整宽度（简易） */
+.resizable-sider {
+  resize: horizontal;
+  overflow: auto;
+  min-width: 220px;
+  max-width: 480px;
+}
+
+/* 树标题长文本省略并可换行避免横向滚动 */
+.tree-title-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 右侧面包屑与计数栏布局 */
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 12px 8px;
+}
+
+.breadcrumb-link {
+  color: inherit;
+}
+.breadcrumb-link:hover {
+  color: #1677ff;
+}
+
+.grid-count {
+  color: rgba(0,0,0,0.45);
+  font-size: 12px;
+}
+
+/* 目录 Popover 内部滚动区域 */
+.dir-popover .ant-popover-inner-content {
+  padding: 0;
+}
+.dir-popover-body {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 12px 12px 12px;
+}
+
+/* 磁吸目录按钮：固定左侧中部 */
+.floating-dir-button {
+  position: fixed;
+  right: 88px; /* 远离 React Query Devtools 默认按钮，避免重叠 */
+  bottom: 24px;
+  z-index: 1000;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  opacity: 0.85;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+.floating-dir-button:hover {
+  opacity: 1;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+}
+.floating-dir-button:active {
+  transform: scale(0.98);
+}
+

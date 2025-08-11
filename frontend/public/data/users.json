@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "user_seed_admin",
+    "email": "admin@example.com",
+    "password": "admin",
+    "name": "管理员",
+    "isAdmin": true,
+    "isActive": true
+  }
+]

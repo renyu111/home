@@ -30,7 +30,6 @@ import {
   UserOutlined,
   GlobalOutlined
 } from '@ant-design/icons';
-import AuthGuard from '../../components/AuthGuard';
 import AppLayout from '../../components/AppLayout';
 
 const { Title, Text } = Typography;
@@ -247,9 +246,5 @@ function SettingsContent() {
 }
 
 export default function Settings() {
-  return (
-    <AuthGuard>
-      <SettingsContent />
-    </AuthGuard>
-  );
+  return <SettingsContent />;
 }

@@ -6,46 +6,8 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// 请求拦截器
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// 响应拦截器
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/';
-    }
-    return Promise.reject(error);
-  }
-);
-
-// 认证API
-export const authAPI = {
-  login: (data: { email: string; password: string }) =>
-    api.post('/api/auth/login', data),
-  register: (data: { email: string; password: string; name: string }) =>
-    api.post('/api/auth/register', data),
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  },
-};
+// 移除登录注册相关逻辑：不再注入 token，不再处理 401 重定向
+// 保留基础实例供其余模块使用
 
 // 用户API
 export const usersAPI = {
