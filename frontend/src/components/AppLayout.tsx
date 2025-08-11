@@ -9,6 +9,7 @@ import {
   BellOutlined,
   MenuOutlined,
   PictureOutlined,
+  FolderOpenOutlined,
   BookOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
@@ -56,7 +57,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
     {
       key: "/gallery",
       icon: <PictureOutlined />,
-      label: "pic",
+      label: "画廊",
+    },
+    {
+      key: "/local-files",
+      icon: <FolderOpenOutlined />,
+      label: "本地文件",
     },
     {
       key: "/gsap",
@@ -65,8 +71,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     },
     {
       key: "/css",
-      icon: <ThunderboltOutlined />,
-      label: "css",
+      icon: <FileTextOutlined />,
+      label: "CSS 示例",
     },
   ];
 
